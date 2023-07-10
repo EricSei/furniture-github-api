@@ -44,6 +44,8 @@ public class SecurityConfiguration {
 		.antMatchers("/api/health").permitAll()
 		.antMatchers("/api/authenticate").permitAll()
 		.antMatchers(HttpMethod.POST, "/api/products").hasRole("ADMIN")
+		//swagger
+		.antMatchers( HttpMethod.GET, 	"/v3/api-docs/**").permitAll()
 		.anyRequest().authenticated()
 		.and()
 		.sessionManagement().sessionCreationPolicy( SessionCreationPolicy.STATELESS );
