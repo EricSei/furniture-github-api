@@ -7,17 +7,17 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.http.HttpMethod;
 
 import com.eric.furniturehubapi.util.JwtRequestFilter;
 
-import io.swagger.v3.oas.models.PathItem.HttpMethod;
+
 
 @Configuration
 public class SecurityConfiguration {
@@ -39,17 +39,20 @@ public class SecurityConfiguration {
 		http.csrf()
 		.disable()
 		.authorizeRequests()
-		// Admin Routers
-		.antMatchers("/authenticate").permitAll()
-		.anyRequest().authenticated()						   		// if not specified, all other end points need a user login
+		
+		.antMatchers(HttpMethod.POST, "/api/users").permitAll()
+		.antMatchers("/api/health").permitAll()
+		.antMatchers("/api/authenticate").permitAll()
+		.antMatchers(HttpMethod.POST, "/api/products").hasRole("ADMIN")
+		.anyRequest().authenticated()
 		.and()
 		.sessionManagement().sessionCreationPolicy( SessionCreationPolicy.STATELESS );
-	
+
 	// this request will go through many filters, make sure that the FIRST filter that is checked is
 	// the filter for jwts, in order to make sure of that, the filter has to be checked before you check the 
 	// username & password (filter)
-	http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-	http.cors();
+		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+		http.cors();
 	
 		return http.build();
 	}

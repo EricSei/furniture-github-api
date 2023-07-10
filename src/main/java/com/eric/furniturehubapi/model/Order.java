@@ -17,19 +17,6 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-//
-//create table Orders(
-//		id INT PRIMARY KEY  auto_increment,
-//	    quantity INT, 
-//	    isPurchased BOOLEAN, 
-//	    purchased_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-//	    user_id INT,
-//	    product_id INT,
-//	    FOREIGN KEY (user_id) references Users(id),
-//	    Foreign Key (product_id) references Product(id)
-//		
-//	);
-
 @Entity
 @Table(name="Orders")
 public class Order implements Serializable {
@@ -50,9 +37,8 @@ public class Order implements Serializable {
 	private LocalDateTime purchasedTime;
 
 	
-	@ManyToOne(fetch=FetchType.LAZY, optional = false)
+	@ManyToOne(fetch=FetchType.EAGER, optional = false)
 	@JoinColumn(name="user_id" , referencedColumnName = "id")
-	@JsonIgnore
 	private User user;
 	
 	@ManyToOne(fetch=FetchType.EAGER)

@@ -12,10 +12,6 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer > {
 	
-	@Override
-	default Optional<Product> findById(Integer id) {
-		// TODO Auto-generated method stub
-		return Optional.empty();
-	}
+	 Optional<Product> findById(Integer id);
 
 }
